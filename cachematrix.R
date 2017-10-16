@@ -1,15 +1,50 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Cache the inverse of a square matrix
+##   calls the solve() function to calculate the
+##   inverse of a passed in matrix and caches the
+##   result.
 
-## Write a short comment describing this function
+## Example usage:
+## set.seed(1234)
+## r = rnorm(10000)
+## dasmatrix = matrix(r, nrow = 10, ncol = 10)
+## cachematrix <- makeCacheMatrix(dasmatrix)
+## cacheSolve(cachematrix)
+## cacheSolve(cachematrix) 
+## 
 
 makeCacheMatrix <- function(x = matrix()) {
-
+  m <- NULL
+  set <- function(y) {
+    x <<- y
+    m <<- NULL
+  }
+  
+  get <- function() x
+  
+  setsolve <- function(solve) m <<- solve
+  getsolve <- function() m
+  list(set = set, get = get,
+       setsolve = setsolve,
+       getsolve = getsolve)
 }
 
 
-## Write a short comment describing this function
+## Accepts a makeCacheMatrix object and returns the inverse
+##   of the matrix
+## See the top of file example to test it.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+ m <- x$getsolve()
+
+  if(!is.null(m)) {
+    message("Cache hit")
+    return(m)
+  } else {
+    message("Cache miss")
+  }
+
+  data <- x$get()
+  m <- solve(data, ...)
+  x$setsolve(m)
+  m
 }
